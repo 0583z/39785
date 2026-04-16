@@ -1,0 +1,50 @@
+<view class="container">
+  <!-- Header -->
+  <view class="header">
+    <view class="title-section">
+      <text class="title">高校竞赛中心</text>
+      <text class="subtitle">College Competition Hub</text>
+    </view>
+    <view class="search-bar">
+      <icon type="search" size="16" color="#999"/>
+      <input placeholder="搜索竞赛名称..." bindinput="handleSearch"/>
+    </view>
+  </view>
+
+  <!-- Filters -->
+  <scroll-view scroll-x class="filter-scroll" enable-flex>
+    <view 
+      class="filter-item {{selectedMajor === item ? 'active' : ''}}" 
+      wx:for="{{majors}}" 
+      wx:key="*this"
+      bindtap="handleMajorSelect"
+      data-major="{{item}}"
+    >
+      {{item}}
+    </view>
+  </scroll-view>
+
+  <!-- List -->
+  <scroll-view scroll-y class="list-section">
+    <view class="card" wx:for="{{competitions}}" wx:key="id">
+      <view class="card-header">
+        <text class="badge">{{item.level}}</text>
+        <view class="countdown">
+          <icon type="waiting" size="12" color="#999"/>
+          <text>{{item.timeLeft}}</text>
+        </view>
+      </view>
+      <view class="card-title">{{item.name}}</view>
+      <view class="tech-tags">
+        <text class="tag" wx:for="{{item.techStack}}" wx:for-item="tech" wx:key="*this">{{tech}}</text>
+      </view>
+      <view class="prob-box">
+        <text class="prob-text">历史获奖率参考: {{item.winningProb}}%</text>
+      </view>
+      <view class="card-footer">
+        <button class="btn-sub" bindtap="handleSubscribe" data-id="{{item.id}}" data-name="{{item.name}}">订阅提醒</button>
+        <button class="btn-reg">立即报名</button>
+      </view>
+    </view>
+  </scroll-view>
+</view>
