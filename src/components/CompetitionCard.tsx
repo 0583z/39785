@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Competition } from '../data';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Bell, ExternalLink, TrendingUp } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
+import { Clock, Bell, ExternalLink, CalendarPlus } from 'lucide-react';
 import { toast } from 'sonner';
+import { downloadICS } from '../lib/CalendarUtils';
 
 interface CompetitionCardProps {
   competition: Competition;
   onClick?: (comp: Competition) => void;
-  onFollow?: (id: number) => void;
-  onRegister?: (id: number) => void;
+  onFollow?: (id: string) => void;
+  onRegister?: (id: string) => void;
   isFollowed?: boolean;
   isRegistered?: boolean;
 }
@@ -40,7 +39,7 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({
         if (diffDays === 0) {
           setTimeLeft('不足1天');
         } else {
-          setTimeLeft(`还剩 ${diffDays} 天`);
+          setTimeLeft(`${diffDays}天后截止`);
         }
       }
     };
@@ -50,9 +49,14 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({
     return () => clearInterval(timer);
   }, [competition.deadline]);
 
-  const handleSubscribe = (e: React.MouseEvent) => {
+  const handleAddToCalendar = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onFollow?.(competition.id);
+    downloadICS({
+      title: `竞赛提醒: ${competition.name}`,
+      description: `详情: ${competition.description}\n报名地址: ${competition.registrationUrl}`,
+      startTime: competition.deadline
+    });
+    toast.success('日历文件已下载', { description: '手动点击文件即可添加到系统日历' });
   };
 
   const handleRegister = (e: React.MouseEvent) => {
@@ -61,68 +65,58 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({
     window.open(competition.registrationUrl, '_blank');
   };
 
-  const winningProb = (competition.historicalAwardRatio * 100).toFixed(1);
+  const isClosed = timeLeft === '已截止';
 
   return (
     <Card 
-      className="border border-border-color rounded-xl p-4 flex flex-col gap-2 bg-card-white shadow-sm hover:border-academy-blue/30 transition-all active:scale-[0.98] cursor-pointer"
+      className="group border-none rounded-[28px] p-5 flex flex-col gap-4 bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-300 cursor-pointer overflow-hidden relative"
       onClick={() => onClick?.(competition)}
     >
-      <div className="flex justify-between items-start gap-2">
-        <div className="font-bold text-[15px] text-text-dark leading-snug flex-1">
-          {competition.name}
+      <div className="flex justify-between items-start">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <Badge className={`rounded-full px-2.5 py-0.5 text-[10px] font-bold border-none ${isClosed ? 'bg-gray-100 text-gray-500' : 'bg-blue-50 text-blue-600'}`}>
+              {competition.level}
+            </Badge>
+            <span className="text-[10px] font-bold text-gray-400 tracking-wider font-mono">#{competition.category}</span>
+          </div>
+          <h3 className="font-bold text-lg text-gray-900 leading-tight group-hover:text-blue-600 transition-colors">
+            {competition.name}
+          </h3>
         </div>
-        <Badge variant="secondary" className="bg-academy-blue/10 text-academy-blue text-[10px] px-2 py-0 border-none shrink-0">
-          {competition.level}
-        </Badge>
       </div>
       
-      <div className="flex items-center gap-1.5 text-alert-red font-bold text-xs">
-        <Clock className="w-3.5 h-3.5" />
-        报名截止: {timeLeft}
+      <div className="flex items-center gap-2 text-sm">
+        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full font-bold text-xs ${isClosed ? 'bg-gray-50 text-gray-400' : 'bg-red-50 text-red-500 animate-pulse'}`}>
+          <Clock className="w-3.5 h-3.5" />
+          {timeLeft}
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {competition.techStack.slice(0, 2).map((tech) => (
+            <span key={tech} className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-400 rounded-full border border-gray-100 italic">
+              {tech}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-1.5 mt-1">
-        {competition.targetGoal && (
-          <Badge className={`text-[10px] py-0 px-2 h-5 border-none ${
-            competition.targetGoal === '保研' ? 'bg-purple-100 text-purple-700' : 
-            competition.targetGoal === '就业' ? 'bg-green-100 text-green-700' : 
-            'bg-blue-100 text-blue-700'
-          }`}>
-            {competition.targetGoal === '保研' ? '保研神赛' : competition.targetGoal === '就业' ? '就业加分' : '全能推荐'}
-          </Badge>
-        )}
-        <Badge variant="outline" className="text-[10px] py-0 px-2 h-5 border-border-color text-text-muted bg-bg-gray/50">
-          {competition.category}
-        </Badge>
-        {competition.techStack.slice(0, 2).map((tech) => (
-          <Badge key={tech} variant="outline" className="text-[10px] py-0 px-2 h-5 border-border-color text-text-muted">
-            {tech}
-          </Badge>
-        ))}
-      </div>
-
-      <div className="mt-2 flex gap-2">
+      <div className="grid grid-cols-2 gap-3 mt-2">
         <Button 
-          size="sm" 
           variant="outline"
-          className={`flex-1 h-8 border-academy-blue/20 text-xs rounded-lg transition-colors ${
-            isFollowed ? 'bg-academy-blue/10 text-academy-blue border-academy-blue/30' : 'text-academy-blue hover:bg-academy-blue/5'
-          }`}
-          onClick={handleSubscribe}
+          className="rounded-2xl h-11 border-gray-100 bg-gray-50 hover:bg-blue-50 hover:border-blue-100 text-blue-600 font-bold transition-all flex items-center gap-2 text-xs"
+          onClick={handleAddToCalendar}
+          disabled={isClosed}
         >
-          <Bell className={`w-3.5 h-3.5 mr-1.5 ${isFollowed ? 'fill-current' : ''}`} />
-          {isFollowed ? '已关注' : '订阅提醒'}
+          <CalendarPlus className="w-4 h-4" />
+          添加到日历
         </Button>
         <Button 
-          size="sm" 
-          className={`flex-1 h-8 text-xs rounded-lg shadow-sm transition-colors ${
-            isRegistered ? 'bg-green-600 hover:bg-green-700' : 'bg-academy-blue hover:bg-accent-blue'
-          } text-white`}
+          className={`rounded-2xl h-11 font-bold shadow-md transition-all text-xs flex items-center gap-2 ${isClosed ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-100'}`}
           onClick={handleRegister}
+          disabled={isClosed}
         >
-          <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
-          {isRegistered ? '已报名' : '立即报名'}
+          <ExternalLink className="w-4 h-4" />
+          {isClosed ? '已截止' : '立即报名'}
         </Button>
       </div>
     </Card>

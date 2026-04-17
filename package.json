@@ -1,7 +1,8 @@
 {
-  "name": "react-example",
+  "name": "college-competition-hub-web",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.0",
+  "description": "基于 React + TypeScript 的高性能高校竞赛聚合响应式平台",
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
