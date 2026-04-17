@@ -10,7 +10,8 @@ page {
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* 模拟 Tailwind 的一些常用类 */

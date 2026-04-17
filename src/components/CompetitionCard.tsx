@@ -65,7 +65,7 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({
 
   return (
     <Card 
-      className="border border-border-color rounded-xl p-4 flex flex-col gap-2 bg-white shadow-sm hover:border-academy-blue/30 transition-all active:scale-[0.98] cursor-pointer"
+      className="border border-border-color rounded-xl p-4 flex flex-col gap-2 bg-card-white shadow-sm hover:border-academy-blue/30 transition-all active:scale-[0.98] cursor-pointer"
       onClick={() => onClick?.(competition)}
     >
       <div className="flex justify-between items-start gap-2">

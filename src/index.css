@@ -20,6 +20,29 @@
   }
 }
 
+/* Add system dark mode preference mapping for our custom variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-gray: #121212;
+    --color-card-white: #1e1e1e;
+    --color-text-dark: #f0f2f5;
+    --color-text-muted: #a0a0a0;
+    --color-border-color: #333333;
+    --color-academy-blue: #1e88e5; /* Lighter blue for dark mode */
+    --color-accent-blue: #42a5f5; 
+  }
+}
+
+.dark {
+  --color-bg-gray: #121212;
+  --color-card-white: #1e1e1e;
+  --color-text-dark: #f0f2f5;
+  --color-text-muted: #a0a0a0;
+  --color-border-color: #333333;
+  --color-academy-blue: #1e88e5;
+  --color-accent-blue: #42a5f5; 
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
