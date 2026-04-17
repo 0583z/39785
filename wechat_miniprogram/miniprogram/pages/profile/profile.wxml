@@ -1,4 +1,4 @@
-<view className="profile-container">
+<view class="profile-container">
   <!-- 头部信息 -->
   <view class="header-card">
     <view class="user-info">
