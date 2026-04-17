@@ -7,7 +7,11 @@ import { Input } from '@/components/ui/input';
 
 const CATEGORIES = ['全部', '程序设计', '创新创业', '数学建模', '电子/芯片', '机器人'];
 
-export const CompetitionList: React.FC = () => {
+interface CompetitionListProps {
+  onItemClick?: (comp: Competition) => void;
+}
+
+export const CompetitionList: React.FC<CompetitionListProps> = ({ onItemClick }) => {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,7 +55,11 @@ export const CompetitionList: React.FC = () => {
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map(comp => (
-          <CompetitionCard key={comp.id} competition={comp} />
+          <CompetitionCard 
+            key={comp.id} 
+            competition={comp} 
+            onClick={onItemClick}
+          />
         ))}
         {filtered.length === 0 && (
           <div className="col-span-full py-20 text-center flex flex-col items-center gap-4">
