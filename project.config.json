@@ -1,5 +1,5 @@
 {
-  "description": "项目配置文件",
+  "description": "高校竞赛中心 - 原生小程序架构版本",
   "packOptions": {
     "ignore": []
   },
@@ -12,7 +12,7 @@
     "minified": true,
     "newFeature": true,
     "coverView": true,
-    "nodeModules": true,
+    "nodeModules": false,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -31,18 +31,13 @@
       "outputPath": ""
     },
     "useIsolateContext": true,
-    "userConfirmedBundleSwitch": false,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
-    "minifyWXSS": true
+    "useCompilerPlugins": false,
+    "ignoreUploadUnusedFiles": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.4",
+  "libVersion": "3.3.4",
   "appid": "touristappid",
-  "projectname": "college-competition-hub",
-  "condition": {},
-  "editorSetting": {
-    "tabIndent": "insertSpaces",
-    "tabSize": 2
-  }
+  "projectname": "college-comp-hub",
+  "miniprogramRoot": "miniprogram/",
+  "condition": {}
 }

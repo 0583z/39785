@@ -1,7 +1,0 @@
-node_modules/
-.DS_Store
-project.private.config.json
-miniprogram_npm/
-.editorconfig
-.eslintrc.js
-*.log
