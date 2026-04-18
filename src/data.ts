@@ -15,6 +15,7 @@ export interface Competition {
   historicalAwardRatio: number; // 0-1
   description: string;
   targetGoal?: '保研' | '就业' | '通用';
+  ai_suggestion?: string; 
 }
 
 export interface HallOfFame {

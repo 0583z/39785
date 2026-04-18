@@ -12,7 +12,14 @@ export interface CalendarEvent {
 
 export function generateIcsFile(event: CalendarEvent): string {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toISOString().replace(/-|:|\.\d+/g, '').slice(0, 15) + 'Z';
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '';
+      return date.toISOString().replace(/-|:|\.\d+/g, '').slice(0, 15) + 'Z';
+    } catch (e) {
+      return '';
+    }
   };
 
   const start = formatDate(event.startTime);

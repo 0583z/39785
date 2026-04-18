@@ -92,7 +92,7 @@ export const CompetitionCard: React.FC<CompetitionCardProps> = ({
           {timeLeft}
         </div>
         <div className="flex flex-wrap gap-1">
-          {competition.techStack.slice(0, 2).map((tech) => (
+          {Array.isArray(competition.techStack) && competition.techStack.slice(0, 2).map((tech) => (
             <span key={tech} className="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-400 rounded-full border border-gray-100 italic">
               {tech}
             </span>

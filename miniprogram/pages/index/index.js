@@ -206,7 +206,7 @@ Page({
     });
 
     // 智能排序：优先比较权重分数降序，其次比较剩余时间升序
-    return scoredList
+    return (scoredList || [])
       .sort((a, b) => {
         if (b._score !== a._score) {
           return b._score - a._score;
@@ -227,13 +227,13 @@ Page({
       return;
     }
 
-    const suggested = this.data.allCompetitions
-      .filter(comp => comp.name.toLowerCase().includes(query.toLowerCase()))
+    const suggested = (this.data.allCompetitions || [])
+      .filter(comp => comp.name && comp.name.toLowerCase().includes(query.toLowerCase()))
       .map(comp => comp.name)
       .slice(0, 5); 
 
-    const filtered = this.data.allCompetitions.filter(comp => 
-      comp.name.toLowerCase().includes(query.toLowerCase())
+    const filtered = (this.data.allCompetitions || []).filter(comp => 
+      comp.name && comp.name.toLowerCase().includes(query.toLowerCase())
     );
 
     this.setData({ 

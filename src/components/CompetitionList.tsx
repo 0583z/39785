@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Competition, competitions } from '../data';
+import { Competition, competitions as staticCompetitions } from '../data';
 import { CompetitionCard } from './CompetitionCard';
 import { Badge } from '@/components/ui/badge';
 import { Search } from 'lucide-react';
@@ -9,13 +9,19 @@ const CATEGORIES = ['全部', '程序设计', '创新创业', '数学建模', '�
 
 interface CompetitionListProps {
   onItemClick?: (comp: Competition) => void;
+  competitions?: Competition[];
 }
 
-export const CompetitionList: React.FC<CompetitionListProps> = ({ onItemClick }) => {
+export const CompetitionList: React.FC<CompetitionListProps> = ({ onItemClick, competitions: propCompetitions }) => {
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filtered = competitions.filter(comp => {
+  const displayCompetitions = propCompetitions || staticCompetitions;
+
+  const filtered = displayCompetitions.filter(comp => {
+    // Defensive check to ensure name exists before calling toLowerCase
+    if (!comp || !comp.name) return false;
+    
     const matchesCategory = selectedCategory === '全部' || comp.category === selectedCategory;
     const matchesSearch = comp.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
